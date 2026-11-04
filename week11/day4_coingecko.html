@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Live Crypto - CoinGecko</title>
+  <style>
+    body { font-family: Arial; padding:20px; max-width:500px; margin:auto; }
+    input { padding:8px; width:65%; }
+    button { padding:8px 15px; cursor:pointer; }
+    #result { margin-top:20px; padding:15px; border:1px solid #ccc; border-radius:8px; background:#f9f9f9; }
+    .price { font-size:32px; font-weight:bold; margin:10px 0; }
+  </style>
+</head>
+<body>
+  <h1>Live Crypto (CoinGecko)</h1>
+  <input id="coinInput" placeholder="e.g bitcoin, ethereum, solana, dogecoin" value="bitcoin">
+  <button onclick="loadCrypto()">Search</button>
+  <div id="result">Type a coin and search. Try: bitcoin</div>
+
+<script>
+async function loadCrypto(){
+  const coin = document.getElementById("coinInput").value.trim().toLowerCase();
+  const div = document.getElementById("result");
+  if(!coin) return;
+  div.innerHTML = "Loading...";
+  try{
+    // 1. Get price
+    const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coin}&vs_currencies=usd,eur&include_24hr_change=true`);
+    const data = await res.json();
+    if(!data[coin]) throw new Error(`Coin "${coin}" not found. Try: bitcoin, ethereum, tether, solana, dogecoin`);
+    
+    const price = data[coin].usd;
+    const change = data[coin].usd_24h_change;
+    const emoji = change >=0 ? "📈 Up" : "📉 Down";
+    const color = change >=0 ? "green" : "red";
+
+    div.innerHTML = `
+      <h2>🪙 ${coin.toUpperCase()}</h2>
+      <p class="price">$${price.toLocaleString()}</p>
+      <p style="color:${color}"><strong>24h:</strong> ${change.toFixed(2)}% ${emoji}</p>
+      <p><strong>EUR:</strong> €${data[coin].eur.toLocaleString()}</p>
+      <p><em>Live data from CoinGecko API</em></p>
+      <p style="font-size:12px">Try: ethereum, solana, dogecoin, cardano, tron</p>
+    `;
+  }catch(err){
+    div.innerHTML = `<strong style="color:red">Error:</strong> ${err.message}`;
+  }
+}
+loadCrypto();
+</script>
+</body>
+</html>

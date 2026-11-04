@@ -1,0 +1,51 @@
+import pandas as pd
+
+# Load the two spreadsheets (the inputs)
+farmers_df = pd.read_csv('farmers.csv')
+collection_df = pd.read_csv('collection.csv')
+
+# Merge on farmer_name
+merged = pd.merge(collection_df, farmers_df, on='farmer_name', how='left')
+merged['payout_kes'] = merged['litres'] * merged['rate_per_litre']
+
+# Summary per zone
+summary = merged.groupby('zone').agg(
+    total_litres=('litres', 'sum'),
+    total_payout_kes=('payout_kes', 'sum')
+)
+
+top = merged.groupby(['zone','farmer_name'])['litres'].sum().reset_index()
+top = top.loc[top.groupby('zone')['litres'].idxmax()]
+top = top.set_index('zone')[['farmer_name','litres']].rename(columns={'farmer_name':'top_farmer','litres':'top_farmer_litres'})
+
+final_report = pd.concat([summary, top], axis=1)
+final_report = final_report[['total_litres','total_payout_kes','top_farmer','top_farmer_litres']]
+
+print(final_report)
+final_report.to_csv('zone_summary.csv')
+print("\nSaved zone_summary.csv - ready to send to manager!")import pandas as pd
+
+# Load the two spreadsheets (the inputs)
+farmers_df = pd.read_csv('farmers.csv')
+collection_df = pd.read_csv('collection.csv')
+
+# Merge on farmer_name
+merged = pd.merge(collection_df, farmers_df, on='farmer_name', how='left')
+merged['payout_kes'] = merged['litres'] * merged['rate_per_litre']
+
+# Summary per zone
+summary = merged.groupby('zone').agg(
+    total_litres=('litres', 'sum'),
+    total_payout_kes=('payout_kes', 'sum')
+)
+
+top = merged.groupby(['zone','farmer_name'])['litres'].sum().reset_index()
+top = top.loc[top.groupby('zone')['litres'].idxmax()]
+top = top.set_index('zone')[['farmer_name','litres']].rename(columns={'farmer_name':'top_farmer','litres':'top_farmer_litres'})
+
+final_report = pd.concat([summary, top], axis=1)
+final_report = final_report[['total_litres','total_payout_kes','top_farmer','top_farmer_litres']]
+
+print(final_report)
+final_report.to_csv('zone_summary.csv')
+print("\nSaved zone_summary.csv - ready to send to manager!")

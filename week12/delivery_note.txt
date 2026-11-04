@@ -1,0 +1,47 @@
+#Delivery message
+
+Subject: Delivered - Kiambu Dairy Payment Calculator v1.0
+
+Hello,
+
+Delivery complete for the Kiambu Dairy Daily Calculator.
+
+What I built:
+A clean Python CLI tool that solves your daily manual calculation problem. Staff enters liters, it instantly returns payment.
+
+Files delivered (GitHub v1.0):
+1. `week12/dairy_calculator.py` - main tool with input validation
+2. `week12/price.txt` - price file, editable without code
+3. `week12/README.md` - setup and usage guide
+
+How to use:
+python dairy_calculator.py
+Enter liters: 10
+Total pay: 450 KES
+To change price, just edit `price.txt` (e.g., change 45 to 50).
+
+Repo: `OwaaOlang/AI-Data-Analyis` tagged `v1.0`
+
+The tool is tested and ready for your co-op staff. Let me know if you need any revision.
+
+Best,
+Owaa
+
+
+
+#WEEK 12 - DAY 10 DELIVERY
+
+Project: Live Exchange Rate Tracker
+Date: Oct 31, 2026
+Status: Complete & Tested
+
+Tested Currencies:
+- KES: 129.900612
+- UGX: tested
+- SSP: 6049 - tested
+- KES: 129 - tested
+
+API Used: https://open.er-api.com/v6/latest/USD
+Exit Code: 0 (No errors)
+
+Next: README + Push to GitHub

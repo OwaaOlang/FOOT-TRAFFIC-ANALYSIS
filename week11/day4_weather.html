@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Weather Live - Open Meteo</title>
+  <style>
+    body { font-family: Arial; padding: 20px; max-width: 500px; margin: auto; }
+    input { padding: 8px; width: 70%; }
+    button { padding: 8px 15px; cursor: pointer; }
+    #result { margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 8px; background: #f9f9f9; }
+    .temp { font-size: 36px; font-weight: bold; margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <h1>Live Weather (Open-Meteo)</h1>
+  <input type="text" id="cityInput" placeholder="Enter city e.g Kampala, Nairobi, London" value="Kampala">
+  <button onclick="loadWeather()">Search</button>
+  <div id="result">Enter a city name and click Search.</div>
+
+<script>
+function getEmoji(temp, code) {
+  // code is Open-Meteo weather code
+  if (code >= 95) return "⛈️ Thunder";
+  if (code >= 71) return "❄️ Snow";
+  if (code >= 51) return "🌧️ Rain";
+  if (code >= 2) return "⛅ Cloudy";
+  if (temp >= 30) return "🥵 Very Hot";
+  if (temp >= 26) return "☀️ Sunny";
+  if (temp >= 18) return "🌤️ Nice";
+  if (temp >= 10) return "🧥 Cool";
+  return "🥶 Cold";
+}
+
+async function loadWeather() {
+  const city = document.getElementById("cityInput").value.trim();
+  const resultDiv = document.getElementById("result");
+  if(!city) return;
+  resultDiv.innerHTML = "Loading...";
+  try {
+    const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1`);
+    const geoData = await geoRes.json();
+    if (!geoData.results || geoData.results.length === 0) throw new Error(`City "${city}" not found`);
+    
+    const loc = geoData.results[0];
+    const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}&current_weather=true`);
+    const weatherData = await weatherRes.json();
+    const w = weatherData.current_weather;
+    const emoji = getEmoji(w.temperature, w.weathercode);
+    
+    resultDiv.innerHTML = `
+      <h2>📍 ${loc.name}, ${loc.country}</h2>
+      <p class="temp">${w.temperature}°C ${emoji}</p>
+      <p><strong>Wind:</strong> ${w.windspeed} km/h</p>
+      <p><strong>Direction:</strong> ${w.winddirection}°</p>
+      <p><strong>Time:</strong> ${w.time}</p>
+      <p><em>Live data from Open-Meteo API</em></p>
+    `;
+  } catch (error) {
+    resultDiv.innerHTML = `<strong style="color:red">Error:</strong> ${error.message}`;
+  }
+}
+// auto load Kampala on start
+loadWeather();
+</script>
+</body>
+</html>

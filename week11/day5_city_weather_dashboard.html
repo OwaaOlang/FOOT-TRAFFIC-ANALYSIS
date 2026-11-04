@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>City Weather Dashboard - Option B</title>
+<style>
+body{font-family:Arial;padding:20px}
+#result{border:1px solid #ccc;padding:15px;border-radius:10px;margin-top:10px}
+</style>
+</head>
+<body>
+<h2>City Weather Dashboard - Option B</h2>
+<input id="cityInput" value="Kampala" placeholder="Enter city" style="padding:8px;width:250px">
+<button onclick="loadCity()" style="padding:8px">Search</button>
+<div id="result">Enter a city...</div>
+
+<script>
+const OW_KEY = "e9b2d6c0dd50cb7f09a973ce8bc18d9b"; 
+
+async function loadCity(){
+  const city = document.getElementById("cityInput").value.trim();
+  const div = document.getElementById("result");
+  if(!city){ div.innerHTML="Enter city name"; return; }
+  div.innerHTML="Loading "+city+"...";
+  
+  try{
+    const wRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${OW_KEY}`);
+    const w = await wRes.json();
+    if(w.cod != 200){ throw new Error(w.message); }
+
+    // Forecast safe - no more f is not defined
+    let forecastHtml = "<p>No forecast (need free subscription)</p>";
+    try{
+      const fRes = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${OW_KEY}`);
+      const f = await fRes.json();
+      if(f.list){
+        forecastHtml = "";
+        for(let i=0; i<f.list.length && i<24; i+=8){
+          forecastHtml += `<div style="border:1px solid #ddd;padding:5px;margin:3px">${new Date(f.list[i].dt*1000).toDateString()} - ${f.list[i].main.temp}°C</div>`;
+        }
+      }
+    }catch(e){}
+
+    div.innerHTML = `
+      <h3>${w.name}, ${w.sys.country}</h3>
+      <h1>${w.main.temp}°C - ${w.weather[0].description}</h1>
+      <p>Humidity: ${w.main.humidity}% | Wind: ${w.wind.speed} m/s</p>
+      <h3>3-Day Forecast</h3>
+      <div style="display:flex">${forecastHtml}</div>
+    `;
+  }catch(e){
+    div.innerHTML = `Error: ${e.message}<br>Check city and API key. Open Console (F12) to see detail`;
+    console.error(e);
+  }
+}
+// auto load first time
+loadCity();
+</script>
+</body>
+</html>
