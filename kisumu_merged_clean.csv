@@ -1,0 +1,9 @@
+school_name_att,average_attendance_pct,county,school_name_clean,school_name_infra,num_classrooms,water_access
+Kisumu Primary School,88.0,Kisumu,kisumu primary,kisumu primary school ,12.0,Yes
+Maseno Primary,92.0,Kisumu,maseno primary,Maseno Primary,15.0,Yes
+Kondele Primary School,78.0,Kisumu,kondele primary,Kondele Primary School,8.0,Yes
+Milimani Primary,95.0,Kisumu,milimani primary,Milimani Primary,18.0,Yes
+Nyalenda Primary,74.0,Kisumu,nyalenda primary,Nyalenda Primary,6.0,No
+Manyatta Primary,81.0,Kisumu,manyatta primary,Manyatta Primary,9.0,Yes
+Dunga Primary,89.0,Kisumu,dunga primary,Dunga Primary,11.0,Yes
+Ahero Primary,83.0,Kisumu,ahero primary,Ahero Primary,10.0,
